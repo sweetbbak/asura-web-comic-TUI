@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup as bs
 import csv
 import re
 import io
-import keyboard
 import time
+import shutil
 import blessed
 
 pathName = os.getcwd()
@@ -107,6 +107,27 @@ def get_chapters(manga):
     return title
 
 
+def download(images: list, manga_name: str, chapter):
+    iterate = 0
+    pathos = f'{pathName}/{manga_name}/'
+    if not os.path.exists(f'{pathName}/{manga_name}/'):
+        os.mkdir(f'{pathName}/{manga_name}/')
+    elif not os.path.exists(f'{pathos}/{chapter}/'):
+        os.mkdir(f'{pathos}/{chapter}/')
+    # mkdir here
+    paths = f'{pathos}/{chapter}'
+    for img in images:
+        iterate += 1
+        res = requests.get(img, stream=True)
+        name = f'img-{iterate}'
+        if res.status_code == 200:
+            with open(f'{paths}{name}', "wb") as f:
+                shutil.copyfileobj(res.raw, f)
+            print('Image downloaded successfully')
+        else:
+            print(f'Image {img} couldnt be downloaded')
+
+
 def pixct(images):
     for i in images:
         Image(i).show()
@@ -124,7 +145,7 @@ def pixcat(images):
     with term.cbreak(), term.hidden_cursor():
         val = ''
         i = 0
-        while val.lower() != '':
+        while val.lower() != 'q':
             val = term.inkey()
             if val.name == "KEY_DOWN":
                 i += 1
@@ -132,6 +153,8 @@ def pixcat(images):
             if val.name == "KEY_UP":
                 i -= 1
                 refresh(images[i])
+            if val.name == "D":
+                return
 
 
 def pix(images):
@@ -158,6 +181,17 @@ def get_url(manga, ch_choice):
     return mangaUrl
 
 
+def confirm(text: str):
+    args = [f'gum confirm "{text}"']
+    res = subprocess.Popen(args, shell=True)
+    res.wait()
+    rco = res.returncode
+    if rco == 0:
+        return True
+    else:
+        return False
+
+
 def main():
     # get front page, parse titles, return chosen title.
     html = get_html(url)
@@ -173,9 +207,14 @@ def main():
     # get html for chapter, then get images and write to file.
     ch_html = get_html(manga_url)
     images = get_images(ch_html)
-    print(images)
     to_file(images)
     pixcat(images)
+    downl = confirm("Download Chapter?")
+    if downl:
+        download(images, urlname, ch_choice)
+    else:
+        main()
+    # download(images, urlname, ch_choice)
     # pix(images)
 
 
