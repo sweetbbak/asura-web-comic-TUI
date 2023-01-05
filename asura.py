@@ -6,10 +6,10 @@ import requests
 from bs4 import BeautifulSoup as bs
 import csv
 import re
-import io
-import time
+# import time
 import shutil
 import blessed
+from rich import print
 
 pathName = os.getcwd()
 headers = {
@@ -130,12 +130,12 @@ def download(images: list, manga_name: str, chapter):
 
 def pixct(images):
     for i in images:
-        Image(i).show()
+        Image(i).show()  # Prints all images to term
 
 
 def refresh(image):
     os.system("clear")
-    Image(image).show()
+    Image(image).show(offset_y=100)
 
 
 term = blessed.Terminal()
@@ -153,7 +153,7 @@ def pixcat(images):
             if val.name == "KEY_UP":
                 i -= 1
                 refresh(images[i])
-            if val.name == "D":
+            if val.name == "d":
                 return
 
 
@@ -213,9 +213,7 @@ def main():
     if downl:
         download(images, urlname, ch_choice)
     else:
-        main()
-    # download(images, urlname, ch_choice)
-    # pix(images)
+        exit
 
 
 main()
