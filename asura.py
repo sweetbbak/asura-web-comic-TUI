@@ -135,14 +135,14 @@ def pixct(images):
 
 def refresh(image):
     os.system("clear")
-    Image(image).show(offset_y=100)
+    Image(image).show()
 
 
 term = blessed.Terminal()
 
 
 def pixcat(images):
-    with term.cbreak(), term.hidden_cursor():
+    with term.cbreak():  # term.hidden_cursor():
         val = ''
         i = 0
         while val.lower() != 'q':
