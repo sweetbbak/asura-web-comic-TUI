@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"slices"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -143,7 +142,7 @@ func frontPage() error {
 		return fmt.Errorf("no found chapters")
 	}
 
-	slices.Sort(ch)
+	ch, _ = sortChapters(ch)
 
 	chsel, err := listfzf(ch)
 	if err != nil {

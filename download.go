@@ -8,10 +8,10 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
-
-	"github.com/fmartingr/go-cbz"
 )
 
 func isExists(file string) bool {
@@ -82,23 +82,30 @@ func makeCbz(file, name string, imgs []string) error {
 	return nil
 }
 
-// filename - series name - array of relative image paths
-func makeCBZ(file string, name string, imgs []string) error {
-	comic, err := cbz.New()
-	if err != nil {
-		return err
-	}
+// find a better file to put this in
+// chapters are always in "Chapter N" format
+func sortChapters(data []string) ([]string, error) {
+	var lastErr error
+	sort.Slice(data, func(i, j int) bool {
+		s := strings.Split(data[i], " ")
+		n := s[len(s)-1]
 
-	comic.ComicInfo().Series = name
-
-	for _, img := range imgs {
-		err := comic.AppendPage(img)
+		a, err := strconv.ParseInt(n, 10, 64)
 		if err != nil {
-			return err
+			lastErr = err
+			return false
 		}
-	}
+		s2 := strings.Split(data[j], " ")
+		n2 := s2[len(s2)-1]
 
-	return comic.Save(file)
+		b, err := strconv.ParseInt(n2, 10, 64)
+		if err != nil {
+			lastErr = err
+			return false
+		}
+		return a < b
+	})
+	return data, lastErr
 }
 
 var badReq = errors.New("Http request status not OK")

@@ -1,9 +1,9 @@
-# asura webcomic TUI
+![Asura](assets/asura.png)
 
-Search the front page of the popular manhwa / webcomic site, asura scans and then view the chapter right in your terminal (kitty only)
+### asura webcomic TUI
 
-![gif demonstration](https://github.com/sweetbbak/asura-web-comic-TUI/blob/main/asura_testes.gif)
-
+Search the front page of the popular manhwa & webcomic site, asura scans and download webcomics.
+Massive update and rewrite in Golang.
 
 ```
  @@@@@@    @@@@@@   @@@  @@@  @@@@@@@    @@@@@@   
@@ -18,6 +18,13 @@ Search the front page of the popular manhwa / webcomic site, asura scans and the
  :   : :  :: : :     : :  :    :   : :   :   : :  
 
 
+```
+
+Building `asura`
+```sh
+go build
+# optionally pack the binary with `upx`
+upx -9 asura
 ```
 
 feel free to send a PR!
