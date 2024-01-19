@@ -5,6 +5,9 @@
 Search the front page of the popular manhwa & webcomic site, asura scans and download webcomics.
 Massive update and rewrite in Golang.
 
+![example one](assets/1.png)
+![example two](assets/2.png)
+
 ```
  @@@@@@    @@@@@@   @@@  @@@  @@@@@@@    @@@@@@   
 @@@@@@@@  @@@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@@  

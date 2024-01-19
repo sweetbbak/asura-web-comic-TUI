@@ -51,13 +51,15 @@ func list(args []string, title string) string {
 	return opt
 }
 
-func listfzf(args []string) (string, error) {
+func listfzf(args []string, chname string) (string, error) {
 	idx, err := fzf.Find(
 		args,
 		func(i int) string {
 			return args[i]
 		},
 		fzf.WithPromptString("$ "),
+		fzf.WithHeader(chname),
+		fzf.WithCursorPosition(fzf.CursorPositionTop),
 	)
 	if err == fzf.ErrAbort {
 		return "", fmt.Errorf("No selection")
@@ -121,7 +123,7 @@ func frontPage() error {
 		titles = append(titles, title)
 	}
 
-	sel, err := listfzf(titles)
+	sel, err := listfzf(titles, "Manga")
 	if sel == "" || err != nil {
 		return fmt.Errorf("No selection")
 	}
@@ -144,7 +146,7 @@ func frontPage() error {
 
 	ch, _ = sortChapters(ch)
 
-	chsel, err := listfzf(ch)
+	chsel, err := listfzf(ch, sel)
 	if err != nil {
 		return err
 	}
